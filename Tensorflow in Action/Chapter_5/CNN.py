@@ -1,11 +1,12 @@
 '''
-    更优的SoftmaxRegression使用
-    卷积和池化
-    CPU运算很慢
+    卷积神经网络：Convolutional Neural Network
 '''
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
+
+mnist = input_data.read_data_sets("../Chapter_3/MNIST_data/", one_hot=True)
+sess = tf.InteractiveSession()
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
@@ -23,15 +24,13 @@ def max_pool_2x2(x):
 
 x = tf.placeholder(tf.float32, [None, 784])
 y_ = tf.placeholder(tf.float32, [None, 10])
-mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-sess = tf.InteractiveSession()
+x_image = tf.reshape(x, [-1,28,28,1])
+
 '''
     第一层卷积
 '''
 W_conv1 = weight_variable([5,5,1,32])
 b_conv1 = bias_variable([32])
-
-x_image = tf.reshape(x, [-1,28,28,1])
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
 h_pool1 = max_pool_2x2(h_conv1)
 
@@ -48,7 +47,6 @@ h_pool2 = max_pool_2x2(h_conv2)
 '''
 W_fc1 = weight_variable([7 * 7 * 64, 1024])
 b_fc1 = bias_variable([1024])
-
 h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
